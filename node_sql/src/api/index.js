@@ -3,7 +3,9 @@ const controller = require("./controller");
 const router = require("express").Router();
 
 const defaultRouters = () => {
-	router.post("/", controller.createStudent);
+	router.post("/student/", controller.createStudent);
+	router.post("/subject/", controller.createSubject);
+	router.get("/",controller.studentWithSubjects)
 	return router;
 };
 

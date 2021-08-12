@@ -5,8 +5,9 @@ const defaultRouters = require("./src/api");
 // const Subject = require("./db/subjectModel");
 const http = require("http");
 const app = express();
-const Port = 8080 || process.env.PORT;
+const Port = 8081 || process.env.PORT;
 
+app.use(express.json());
 /*Student.hasMany(Subject);
 sequelize
 	.sync({ force: true })
@@ -28,7 +29,7 @@ sequelize
 		console.log(err);
 	});*/
 
-sequelize.authenticate().then((res) => {
+sequelize.authenticate({ force: true }).then((res) => {
 	console.log("Authentication to db successfull");
 	app.use("/api/v1", defaultRouters());
 });
