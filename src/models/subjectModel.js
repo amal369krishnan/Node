@@ -1,4 +1,4 @@
-const sequelize = require("./index");
+const sequelize = require("../db");
 const Sequelize = require("sequelize");
 
 const subject = sequelize.define("subject", {

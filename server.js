@@ -28,7 +28,7 @@ sequelize
 	.catch((err) => {
 		console.log(err);
 	});*/
-
+sequelize.sync();
 sequelize.authenticate({ force: true }).then((res) => {
 	console.log("Authentication to db successfull");
 	app.use("/api/v1", defaultRouters());
