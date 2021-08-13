@@ -2,6 +2,7 @@ const Student = require("../models/studentModel");
 const Subject = require("../models/subjectModel");
 const user = require("../models/user");
 const jwt = require("jsonwebtoken");
+const bcrypt = require("bcrypt");
 
 const createStudent = async (req, res) => {
 	const { body } = req;
@@ -45,6 +46,8 @@ const Register = async (req, res) => {
 		if (alreadyexists) {
 			return res.json({ message: "User already exists" });
 		}
+		//const salt = await bcrypt.genSalt();
+		body.password = await bcrypt.hash(body.password, 10);
 		const user_res = await user.create(body);
 		return res.status(200).json(user_res);
 	}
@@ -58,14 +61,22 @@ const Login = async (req, res) => {
 		if (!userinfo) {
 			return res.status(400).json("Email/password not matches correctly");
 		}
-		const jwt_token = jwt.sign(
-			{ email: userinfo.email, id: userinfo.id },
-			"bla@123",
-			{
-				expiresIn: 86400, // expires in 24 hours
+		try {
+			const user = await bcrypt.compare(body.password, userinfo.password);
+			if (user) {
+				const jwt_token = jwt.sign(
+					{ email: userinfo.email, id: userinfo.id },
+					"bla@123",
+					{
+						expiresIn: 86400, // expires in 24 hours
+					}
+				);
+				return res.status(200).json(jwt_token);
 			}
-		);
-		return res.status(200).json(jwt_token);
+			return res.send("Something went wrong");
+		} catch (error) {
+			return res.status(401).json(error);
+		}
 	}
 	return res.status(400).json("Email/password not matches correctly");
 };
