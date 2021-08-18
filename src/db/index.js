@@ -4,14 +4,12 @@ export default async function mongodbconnector() {
 	const url =
 		"mongodb+srv://amal369krishnan:sJ08OkH8KzL5LnUL@cluster0.vvp7w.mongodb.net/Testdb?retryWrites=true&w=majority";
 	try {
-		await mongoose.connect(url, {
-			useNewUrlParser: true,
-			useUnifiedTopology: true,
-		});
-
-		await mongoose.connection.on("open", () => {
-			console.log("mongoose connection established");
-		});
+		await mongoose
+			.connect(url, {
+				useNewUrlParser: true,
+				useUnifiedTopology: true,
+			})
+			.then(() => console.log("connected to mongo db"));
 	} catch (error) {
 		console.log(error);
 	}
