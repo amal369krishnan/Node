@@ -1,40 +1,13 @@
-const express = require("express");
-const sequelize = require("./src/db");
-const defaultRouters = require("./src/api");
-// const Student = require("./db/studentModel");
-// const Subject = require("./db/subjectModel");
-const http = require("http");
-const app = express();
-const Port = 8081 || process.env.PORT;
+const express = require("express")
+const routers = require("./routers/routers")
+const sequelize = require("./database/dbConnection")
 
-app.use(express.json());
-/*Student.hasMany(Subject);
-sequelize
-	.sync({ force: true })
-	.then((res) => {
-		console.log(res);
-	})
-	.then((student) => {
-		return Student.create({ name: "Amal", instituteName: "VTU" });
-	})
-	.then((student) => {
-		return student.createSubject({
-			subjectname: "Computer Science",
-		});
-	})
-	.then((res) => {
-		console.log(res);
-	})
-	.catch((err) => {
-		console.log(err);
-	});*/
-sequelize.sync();
-sequelize.authenticate({ force: true }).then((res) => {
-	console.log("Authentication to db successfull");
-	app.use("/api/v1", defaultRouters());
-});
+let app = express()
+app.use(express.json())
+app.use(routers);
+let port = process.env.PORT || 8000;
 
-const server = http.createServer(app);
-server.listen(Port, () => {
-	console.log(`Server running on port : ${Port}`);
+app.listen(port,()=>{
+    sequelize.sync()
+    console.log(`server running on ${port}`);
 });
